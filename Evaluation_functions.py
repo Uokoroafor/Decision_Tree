@@ -132,11 +132,11 @@ def accuracy_average(dataset, random_generator=default_rng(), max_depth=10000, f
     return accuracy
 
 
-def confusion_matrix_total(dataset, random_generator=default_rng(), prints=False, max_depth=10000):
+def confusion_matrix_total(dataset, random_generator=default_rng(), prints=False, max_depth=10000, folds=10):
     classes = len(np.unique(dataset[:, -1]))
     matrix = np.zeros((classes, classes))
     data = random_generator.permutation(dataset)
-    for i in range(10):
+    for i in range(folds):
         train_data, test_data = cross_validation_split(data, i)
         tree = decision_tree_learning(train_data, max_depth)
         if prints:
@@ -145,7 +145,7 @@ def confusion_matrix_total(dataset, random_generator=default_rng(), prints=False
             print('############################')
         matrix += get_confusion_matrix(test_data, tree)
 
-    return matrix / 10
+    return matrix / folds
 
 
 def precision_per_class(matrix):
