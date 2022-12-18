@@ -4,7 +4,7 @@ from Evaluation_functions import *
 
 if __name__ == '__main__':
     # Initialise random seed
-    seed = 6345789
+    seed = 100
     rg = default_rng(seed)
 
     # Load datasets
@@ -21,7 +21,7 @@ if __name__ == '__main__':
     print(clean_tree)
     print(noisy_tree)
 
-    # Below evaluate our tree with classification metrics over the clean and noisy datasets
+    # To evaluate with classification metrics over the clean and noisy datasets
 
     # 10-fold cross validation on clean data set
     clean_cv = get_cv_metrics(clean_data, rg)
@@ -46,4 +46,3 @@ if __name__ == '__main__':
     for key, value in noisy_cv.items():
         print(key)
         print(value)
-

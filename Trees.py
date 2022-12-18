@@ -30,18 +30,18 @@ class DecisionTree:
             is_leaf = node.is_leaf
         return node.class_label
 
-    def classify_tests(self, data):
-        predictions = np.zeros(data.shape[0], dtype='f')
-        for row in range(data.shape[0]):
-            predictions[row] = self.classify_example(data[row, :])
+    def classify_tests(self, dataset):
+        predictions = np.zeros(dataset.shape[0], dtype='f')
+        for row in range(dataset.shape[0]):
+            predictions[row] = self.classify_example(dataset[row, :])
         return predictions
 
-    def get_errors(self, data):
-        predictions = np.zeros(data.shape[0], dtype='f')
-        for row in range(data.shape[0]):
-            predictions[row] = self.classify_example(data[row, :])
+    def get_errors(self, dataset):
+        predictions = np.zeros(dataset.shape[0], dtype='f')
+        for row in range(dataset.shape[0]):
+            predictions[row] = self.classify_example(dataset[row, :])
 
-        return sum(data[:, -1] != predictions) / len(data)
+        return sum(dataset[:, -1] != predictions) / len(dataset)
 
     def get_max_depth(self):
         max_depth = 0
@@ -106,12 +106,14 @@ class DecisionTree:
                 self.leaves.append(node)
         return self
 
-    def make_leaf(self, node):
+    @staticmethod
+    def make_leaf(node):
         # convert a branch node to a leaf
         node.is_leaf = True
         node.classify()
 
-    def make_branch(self, node):
+    @staticmethod
+    def make_branch(node):
         # convert a leaf node to a branch
         node.is_leaf = False
         node.classify()
@@ -138,15 +140,15 @@ def tree_algorithm(node, max_depth=10000):
         data_below.depth = depth
         data_above.depth = depth
 
-        sub_node_lower = tree_algorithm(data_below, max_depth)
-        sub_node_upper = tree_algorithm(data_above, max_depth)
+        tree_algorithm(data_below, max_depth)
+        tree_algorithm(data_above, max_depth)
 
         return
 
 
-def decision_tree_learning(data, max_depth=10000):
+def decision_tree_learning(dataset, max_depth=10000):
     # Builds a tree with data provided and maximum depth
-    root = Node(data, depth=0)
+    root = Node(dataset, depth=0)
     # Recursive Tree Algorithm that attaches nodes to the root
     tree_algorithm(node=root, max_depth=max_depth)
     tree = DecisionTree(root=root)
@@ -155,19 +157,19 @@ def decision_tree_learning(data, max_depth=10000):
     return tree
 
 
-def test_tree(data):
+def test_tree(dataset):
     # Train a tree and assert that it's an instance of a DecisionTree object
-    t_tree = decision_tree_learning(data)
+    t_tree = decision_tree_learning(dataset)
     assert isinstance(t_tree, DecisionTree), "Object generated is not a decision tree object"
 
 
-def test_max_depth(data):
+def test_max_depth(dataset):
     test_depths = np.random.choice(list(range(1, 20)), 4)
     # Picks 4 random integers between from 1 to 19 and for each generates a tree of maximum depth of that integer.
     # The test is to make sure this requirement is respected
 
     for i in test_depths:
-        t_tree = decision_tree_learning(data, int(i))
+        t_tree = decision_tree_learning(dataset, int(i))
         assert t_tree.get_max_depth() <= i, "Max Depth has been exceeded!"
 
 

@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def calc_entropy(data):
     labels = data[:, -1]
     label, label_count = np.unique(labels, return_counts=True)
@@ -41,11 +42,13 @@ class Node:
 
         elif self.is_leaf:
             node_type = 'Leaf Node'
-            return f'{node_type} : [class: {self.class_label}.split column: {self.parent_split_column}, split_value: {self.parent_split_value}, depth: {self.depth}]'
+            return f'{node_type} : [class: {self.class_label}.split column: {self.parent_split_column}, ' \
+                   f'split_value: {self.parent_split_value}, depth: {self.depth}] '
         else:
             node_type = 'Branch Node'
 
-        return f'{node_type} : [split column: {self.parent_split_column}, split_value: {self.parent_split_value}, depth: {self.depth}]'
+        return f'{node_type} : [split column: {self.parent_split_column}, split_value: {self.parent_split_value}, ' \
+               f'depth: {self.depth}] '
 
     def check_pure(self):
         labels = self.data[:, -1]
@@ -128,7 +131,7 @@ class Node:
 
     def has_leaves(self):
         if self.left_child:
-            return (self.left_child.is_leaf and self.left_child.is_leaf)
+            return self.left_child.is_leaf and self.left_child.is_leaf
         else:
             return False
 
@@ -141,6 +144,7 @@ class Node:
 
         else:
             self.class_label = None
+
 
 if __name__ == '__main__':
     pass
